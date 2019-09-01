@@ -1,18 +1,14 @@
 // ==UserScript==
 // @name         Free Agar.io Bots (Vanilla Version)
-// @version      1.0.9
-// @description  Free open source agar.io bots
-// @author       Nel, Nebula
+// @namespace    Free and Real agario bots
+// @version      1.0.4
+// @description  Free and Real open source agario bots (tags: ogario, legend mod, vanilla, free bots, unlimited, hacks, infinity, agar.io, cheat, miniclip, agar)
+// @author       Nel, xN3BULA, Jimboy3100
 // @grant        none
 // @run-at       document-start
 // @match        *://agar.io/*
 // ==/UserScript==
 
-async function getversion() {
-await fetch("https://sonnybuchan.co.uk/version.txt").then(function(response) {
-    return response.text();
-  })
-}
 /* START OF USER SETTINGS */
 window.options = {
     settings: {
@@ -381,11 +377,11 @@ function setGUI() {
     $("#mainui-play").append(menuhtml);
     document.getElementById('advertisement').innerHTML = `
 <button id="botsPanel">Options</button>
-        <h2 id="botsInfo">
+        <h3 id="botsInfo">
             <a href="https://discord.gg/SDMNEcJ" target="_blank">Free Agar.io Bots</a>
-        </h2>
+        </h3>
         <h5 id="botsAuthor">
-            Developed by <a href="https://twitter.com/unelocked" target="_blank">Nel</a>
+            Developed by <a href="https://www.youtube.com/channel/UCZo9WmnFPWw38q65Llu5Lug" target="_blank">Nel, </a><a href="https://github.com/xN3BULA" target="_blank">xN3BULA, </a><a href="http://legendmod.ml/" target="_blank">Jimboy3100</a>
         </h5>
         <span id="statusText">Status: <b id="userStatus">Disconnected</b></span>
         <br>
@@ -394,6 +390,7 @@ function setGUI() {
         <br>
         <input type="text" id="botsName" placeholder="Bots Name" maxlength="15" spellcheck="false">
         <input type="number" id="botsAmount" placeholder="Bots Amount" min="10" max="199" spellcheck="false">
+		<input type="text" id="botsRemoteIP" placeholder="ws://localhost:8083" maxlength="100" spellcheck="false">
         <button id="connect">Connect</button>
         <br>
         <button id="startBots" disabled>Start Bots</button>
@@ -407,7 +404,13 @@ function setGUI() {
         window.bots.amount = JSON.parse(localStorage.getItem('localStoredBotsAmount'))
         document.getElementById('botsAmount').value = String(window.bots.amount)
     }
-
+	var storedbotsRemoteIP = localStorage.getItem("localstoredBotsRemoteIP");
+	if (storedbotsRemoteIP==null || storedbotsRemoteIP==""){
+	storedbotsRemoteIP = "ws://localhost:8083";
+	}
+	window.bots.remoteIP = storedbotsRemoteIP;
+	window.SERVER_HOST = storedbotsRemoteIP;
+	$('#botsRemoteIP').val(storedbotsRemoteIP)
     window.setUpHotkeys();
     window.setUpOptions();
 }
@@ -528,8 +531,8 @@ function setGUIStyle() {
             #userStatus, #botsAI {
                 color: #DA0A00;
             }
-            #botsName, #botsAmount {
-                margin-top: 15px;
+            #botsName, #botsAmount, #botsRemoteIP {
+                margin-top: 5px;
                 width: 144px;
                 border: 1px solid black;
                 border-radius: 5px;
@@ -548,7 +551,7 @@ function setGUIStyle() {
                 width: 160px;
                 font-size: 18px;
                 outline: none;
-                margin-top: 15px;
+                margin-top: 5px;
                 letter-spacing: 1px;
             }
             #connect {
@@ -612,13 +615,25 @@ function setGUIEvents() {
     })
     document.getElementById('startBots').addEventListener('click', () => {
         if (window.game.url && window.game.protocolVersion && window.game.clientVersion && !window.user.startedBots) {
-            if (window.bots.name && window.bots.amount && !document.getElementById('socialLoginContainer')) window.connection.send(window.buffers.startBots(window.game.url.split('?')[0], window.game.protocolVersion, window.game.clientVersion, window.user.isAlive, window.bots.name, window.bots.amount))
-            else alert('Bots name and amount are required before starting the bots, also you need to be logged in to your agar.io account in order to start the bots')
+			this.partytoken = MC.getPartyToken()
+			if (this.partytoken!="" && this.partytoken!=null){
+				if (window.bots.name && window.bots.amount && !document.getElementById('socialLoginContainer')) window.connection.send(window.buffers.startBots(window.game.url.split('?')[0], window.game.protocolVersion, window.game.clientVersion, window.user.isAlive, window.unescape(window.encodeURIComponent(window.bots.name)), window.bots.amount))
+				//if (window.bots.name && window.bots.amount && !document.getElementById('socialLoginContainer')) window.connection.send(window.buffers.startBots(window.game.url.split('?')[0], window.game.protocolVersion, window.game.clientVersion, window.user.isAlive, window.bots.name, window.bots.amount))
+				else alert('Bots name and amount are required before starting the bots, also you need to be logged in to your agar.io account in order to start the bots')
+			}
+			else{
+				alert('Bots are designed for party')
+			}
         }
     })
     document.getElementById('stopBots').addEventListener('click', () => {
         if (window.user.startedBots) window.connection.send(new Uint8Array([1]).buffer)
     })
+        document.getElementById('botsRemoteIP').addEventListener('change', function(){
+            window.bots.remoteIP = this.value
+            localStorage.setItem('localstoredBotsRemoteIP', window.bots.remoteIP)
+			window.SERVER_HOST = window.bots.remoteIP
+        })
 }
 
 function loadUI(){
