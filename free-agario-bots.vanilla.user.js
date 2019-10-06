@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Free Agar.io Bots (Vanilla Version)
 // @namespace    Free and Real agario bots
-// @version      1.0.4
+// @version      1.0.9
 // @description  Free and Real open source agario bots
 // @author       Nel, xN3BULA, Jimboy3100
 // @grant        none
