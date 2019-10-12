@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Free Agar.io Bots (OGARio Version)
-// @version      1.0.9
+// @version       1.0.10
 // @description  Free open source agar.io bots with OGARio
 // @author       Nel & szymy (OGARio deobfuscated by ReF)
 // @grant        GM_xmlhttpRequest
