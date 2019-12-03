@@ -30,6 +30,7 @@ VPS
 5. Run `sudo chmod +x install.sh` command
 6. Run `sudo ./install.sh` command
 7. Run `node server` command and leave the process running
+Note: If docker is installed (sudo apt install docker.io -y), steps 5-7 can be replaced by running `docker build -t agario-bot . && docker run -p 8083:8083 --name agario --restart always agario-bot:latest`
 8. Follow the same steps explained on `Windows` section for installing userscript in Tampermonkey and put your VPS IP on SERVER HOST input in the OPTIONS panel
 9. Go to [agar.io](https://agar.io) and click "Connect" button
 10. On top right of your browser you will see a shield with a red mark, click there and then click "Load unsafe scripts"
